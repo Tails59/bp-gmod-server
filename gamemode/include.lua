@@ -2,7 +2,7 @@ AddCSLuaFile()
 
 include("shared/easylogs.lua")
 
-local folder_name = "darkrp2"
+local folder_name = "bp-gmod-server"
 
 local function addShared(File)
 	include("shared/"..File)
