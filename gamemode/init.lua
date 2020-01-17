@@ -13,3 +13,9 @@ end
 function GM:PlayerInitialSpawn(ply, _)
 	
 end
+
+function GM:PlayerSpawn(ply, _)
+	player_manager.SetPlayerClass(ply, "darkrp_custom_playerclass")
+	player_manager.OnPlayerSpawn(ply)
+	
+end

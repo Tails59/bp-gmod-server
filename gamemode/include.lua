@@ -46,11 +46,34 @@ local function loader(file, dir)
 	end
 end
 
+//Load custom classes
+do
+	local path = folder_name.."/gamemode/classes/"
+	local files, folders = file.Find(path.."*", "LUA")
+
+	for k, v in pairs(files) do
+		include(path..v)
+		if SERVER then
+			AddCSLuaFile(path..v)
+		end
+	end
+
+	for k, v in pairs(folders) do
+		local f, _ = file.Find(path..v.."/*.lua", "LUA")
+		
+		for i, j in pairs(f) do
+			include(path..v.."/"..j)
+			if SERVER then
+				AddCSLuaFile(path..v.."/"..j)
+			end
+		end
+	end
+end
+
 //Load metatables
 do
 	local files, folders = file.Find(folder_name.."/gamemode/metatables/*.lua", "LUA")
 
-	local type
 	for k, v in pairs(files) do
 		loader(v, "metatables/")
 	end
