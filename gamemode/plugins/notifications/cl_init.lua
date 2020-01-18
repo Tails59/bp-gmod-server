@@ -250,4 +250,4 @@ vgui.Register( "NoticePanel", PANEL, "DPanel" )
 
 net.Receive("notification.FromServer", function()
 	notification.AddLegacy(net.ReadString(), net.ReadString(), net.ReadFloat())
-end
+end)
