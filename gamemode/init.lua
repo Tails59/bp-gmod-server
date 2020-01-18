@@ -19,3 +19,7 @@ function GM:PlayerSpawn(ply, _)
 	player_manager.OnPlayerSpawn(ply)
 	
 end
+
+function GM:AddNotify(str, type, len)
+	notification.AddLegacy(str, type, len)
+end
