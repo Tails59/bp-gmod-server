@@ -23,3 +23,7 @@ end
 function GM:AddNotify(str, type, len)
 	notification.AddLegacy(str, type, len)
 end
+
+function GM:CreateTeams()
+	print("teams created!")
+end
