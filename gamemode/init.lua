@@ -1,6 +1,5 @@
 include("include.lua")
 include("shared.lua")
-util.AddNetworkString("changeTeamaaa")
 
 local CurTime = CurTime
 local pairs = pairs
