@@ -28,19 +28,19 @@ end
 local function loader(file, dir)
 	type = string.sub(file, 1, 2)
 
-	if type == "sh" then
-		include(dir..file)
-		if SERVER then
-		AddCSLuaFile(dir..file)
+	if type == "cl" then
+		if CLIENT then
+			include(dir..file)
+		else
+			AddCSLuaFile(dir..file)
 		end
 	elseif type == "sv" then
 		if SERVER then
 			include(dir..file)
 		end
 	else
-		if CLIENT then
-			include(dir..file)
-		else
+		include(dir..file)
+		if SERVER then
 			AddCSLuaFile(dir..file)
 		end
 	end
