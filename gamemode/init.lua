@@ -1,3 +1,4 @@
+include("shared.lua")
 include("include.lua")
 include("shared.lua")
 
@@ -16,7 +17,6 @@ function GM:PlayerInitialSpawn(ply, _)
 end
 
 function GM:PlayerCanJoinTeam(ply, team)
-
 end
 
 function GM:PlayerLoadout(ply)
@@ -25,7 +25,7 @@ end
 
 function GM:PlayerSpawn(ply, _)
 	player_manager.OnPlayerSpawn(ply)
-	
+  
 	ply:SetTeam(TEAM_CITIZEN)
 
 	hook.Call("PlayerLoadout", ply)
