@@ -1,6 +1,8 @@
 Jobs = {}
 Jobs.Teams = {}
 
+local team = team
+
 local INDEX = 1
 local DEFAULTS = {
 	//These 4 values are NOT optional, and must be supplied every time Job.createJob is called. They are only present here
@@ -11,7 +13,8 @@ local DEFAULTS = {
     Description = 0,
 
 	Weapons = {
-    	["weapon_p2282"] = 100,
+    	["weapon_physgun"] = 0,
+    	["gmod_tool"] = 0,
     },
 
     Count = -1,
@@ -80,4 +83,52 @@ function Jobs.teamData(index)
 	if team.Valid(index) then
 		return table.Copy(Jobs.Teams[i])
 	end
+end
+
+/*
+	Takes a player or number/TEAM_ enum and returns the playerClass field for the job related
+	to that argument
+
+	returns false if there is no class, or the argument was invalid
+*/
+function Jobs.getClass(arg)
+	if isnumber(arg) then
+		if team.Valid(arg) then
+			return Jobs.Teams[arg].playerClass	
+		end
+	else
+		if arg:IsPlayer() then
+			if team.Valid(arg:Team()) then
+				return Jobs.Teams[arg:Team()].playerClass
+			end
+		end
+	end
+
+	return false
+end
+
+function Jobs.getModel(ply)
+	if ply:IsPlayer() then
+		if team.Valid(ply:Team()) then
+			return Jobs.Teams[ply:Team()].Models[ math.random( #Jobs.Teams[ply:Team()].Models ) ]
+		end
+	end
+
+	return nil
+end
+
+/**
+	Returns all models for a given job
+*/
+function Jobs.getModels(ply)
+
+end
+
+/**
+	Handles a players loadout on spawn
+	Supports the blacklist system (eventually)
+*/
+function Jobs.Loadout(ply)
+	ply:Give("weapon_physgun")
+	ply:Give("gmod_tool")
 end

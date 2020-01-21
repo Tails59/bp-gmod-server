@@ -18,8 +18,9 @@ TEAM_EXAMPLE = Jobs.createJob({
     -- The following fields are OPTIONAL. If you do not need them, or do not need to change them from their defaults, REMOVE them.
 
     //Note the square brackets around the weapon name = this is required
-    Weapons = { //SWEPs the player will spawn with, and the amount of ammo
-    	["weapon_p2282"] = 100;
+    Weapons = { //SWEPs the player will spawn with, and the amount of ammo - physgun and toolgun are default
+    	["weapon_physgun"] = 0;
+        ["gmod_tool"] = 0;
     },
     
     Count = 0.7, //The amount of players that can have this job. Negative numbers impose no limit, whole numbers represent an absolute limit and decimal values represent a percentage
@@ -49,8 +50,8 @@ TEAM_CITIZEN = Jobs.createJob({
 	Colour = Color(255, 255, 255, 255), 
 
     Models = { 
-        "models/player/Group03/Female_01.mdl",
-        "models/player/Group03/Female_02.mdl"
+        "models/player/gman_high.mdl",
+        "models/player/monk.mdl"
     },
 
     Description = [[This text will serve as the description of
