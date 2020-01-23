@@ -13,6 +13,7 @@ TDerma.Colours = {
 		WHITE =	 Color(255, 255, 255),
 		BLACK = Color(000, 000, 000),
 		CLOSE_BUTTON = Color(000, 000, 000),
+		HEALTHBAR = Color(255, 75, 066),
 	},
 
 	ALT1 = {
