@@ -26,7 +26,7 @@ local function addServer(file)
 end
 
 local function loader(file, dir)
-	type = string.sub(file, 1, 2)
+	local type = string.sub(file, 1, 2)
 
 	if type == "cl" then
 		if CLIENT then
@@ -120,9 +120,8 @@ do
 end
 
 //load clientside files
-if CLIENT then
+do
 	ELogs.Output("Loading clientside lua content...")
-
 	local files, dir = file.Find(folder_name.."/gamemode/client/*.lua", "LUA")
 
 	for i = 1, #files do
