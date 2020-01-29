@@ -7,11 +7,13 @@ local PLAYER_JOIN_DATA_CACHE = {}
 local CurTime = CurTime
 local pairs = pairs
 local ipairs = ipairs
+local string = string
 local hook = hook
 local player_manager = player_manager
 local hook = hook
 local GM = GM
 local util = util
+local mysqloo = mysqloo
 
 function GM:Initialize()
 	DB:Connect()
@@ -21,7 +23,9 @@ function GM:PlayerInitialSpawn(ply, _)
 	player_manager.SetPlayerClass(ply, "darkrp_citizen")
 	ply:SetTeam(TEAM_CITIZEN)
 
-	self:LoadPlayer(ply)
+	if DB:Connected() then
+		self:LoadPlayer(ply)
+	end
 
 	self:DecachePlayer(util.SteamIDTo64(ply:SteamID()))
 end
@@ -110,3 +114,36 @@ function GM:DecachePlayer(steamid64)
 	end
 end
 
+function GM:PlayerSay(ply, text, teamChat)
+	if string.StartWith(text, "//") then
+	end
+
+
+	if string.StartWith(text, Config.COMMAND_KEY) then
+		local validCommand = hook.Call("playerRunCommand", self, ply, text)
+
+		if not validCommand then
+			ply:Notify("This is not a valid command!", NOTIFY_ERROR, 5)
+		end
+
+		return
+	end
+
+	if string.StartWith(text, Config.ADMIN_COMMAND_KEY) then
+		if false then
+			ply:Notify("You do not have permission to use this command!")
+		end
+
+		local validCommand = hook.Call("playerRunAdminCommand", self, ply, text)
+
+		if not validCommand then
+			ply:Notify("This is not a valid command!", NOTIFY_ERROR, 5)
+		end
+
+		return
+	end
+
+
+
+	return text
+end

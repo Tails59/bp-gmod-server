@@ -9,18 +9,18 @@ DB.pass = "q=6+yz:FaL]Vk`"
 DB.db = "darkrp"
 DB.port = 3306
 
-DB.DATABASE = DB.DATABASE or nil
+local DATABASE = DATABASE or nil
 
 /*
 	Returns the query results if successful.
 	If wait is true, it will force the server to wait until the query has finished executing before returning
 */
 function DB:Query(query, callback, wait)
-	if (not DB.DATABASE or not DB.DATABASE:status() == mysqloo.DATABASE_CONNECTED) then
+	if (not DATABASE or not DATABASE:status() == mysqloo.DATABASE_CONNECTED) then
 		error("Database not connected!")
 	end
 
-	local queryObj = DB.DATABASE:query(query)
+	local queryObj = DATABASE:query(query)
 	function queryObj:onSuccess(data)
 		if callback then callback(data) end
 	end
@@ -36,10 +36,24 @@ function DB:Query(query, callback, wait)
 end
 
 /*
+	Returns true if the database is connected (based on the mysqloo.DATABASE_CONNECTED enum)
+*/
+function DB:Connected()
+	return DATABASE:status() == mysqloo.DATABASE_CONNECTED 
+end
+
+/*
+	Returns the connection status of the database
+*/
+function DB:status()
+	return DATABASE:status()
+end
+
+/*
 	Returns a PreparedQuery object for frequently-used queries
 */
 function DB:PreparedQuery(query, callback)
-	local preparedQuery = DB.DATABASE:prepare(query)
+	local preparedQuery = DATABASE:prepare(query)
 
 	function preparedQuery:onSuccess(data)
 		if callback then callback(data) end
@@ -75,16 +89,13 @@ end
 	This function should only be called from the player_connect gameevent
 	after checking if a player doesnt already have a record
 */
-RANK_USER = 1
 function DB:NewPlayerSave(steamid64)
 	local q = [[INSERT INTO main VALUES(
 		]]..steamid64..[[,
-		]]..Config.STARTING_MONEY..[[,
-		]]..RANK_USER..[[
+		]]..Config.STARTING_MONEY..[[
 	)]]
 
-	print(q)
-	local query = DB.DATABASE:query(q)
+	local query = DATABASE:query(q)
 
 	function query:onSuccess(data)
 	end
@@ -100,24 +111,23 @@ end
 /**
 	Called to create the main table if required
 	If the main table is created successfully or already exists,
-	onDatabaseSetup hook will be called to allow plugins to 
+	setupDatabase hook will be called to allow plugins to 
 	create their own tables at the right time.
 */
 function DB:Setup()
 	local q = [[CREATE TABLE IF NOT EXISTS main(
 	steamid VARCHAR(17) NOT NULL UNIQUE,
 	money INT(10) UNSIGNED NOT NULL,
-	rank_id INT(2) NOT NULL,
 
 	CONSTRAINT main_pk PRIMARY KEY (steamid),
 
 	INDEX(steamid)
 	)]]
 
-	local query = DB.DATABASE:query(q)
+	local query = DATABASE:query(q)
 
 	function query.onSuccess(data)
-		hook.Call("onDatabaseSetup")
+		hook.Call("setupDatabase")
 	end
 
 	function query.onError(err)
@@ -136,15 +146,15 @@ end
 	Prints an error and puts the server in safe mode if no connection is made
 */
 function DB:Connect()
-	DB.DATABASE = mysqloo.connect(DB.host, DB.user, DB.pass, DB.db, DB.port)
+	DATABASE = mysqloo.connect(DB.host, DB.user, DB.pass, DB.db, DB.port)
 
-	function DB.DATABASE:onConnected()
+	function DATABASE:onConnected()
 		ELogs.Output("Database connection established!")
 		DB:Setup()
 		hook.Run("onDatabaseConnected")
 	end
 
-	function DB.DATABASE:onConnectionFailed(err)
+	function DATABASE:onConnectionFailed(err)
 		ELogs.Error(err)
 
 		timer.Simple(20, function()
@@ -152,6 +162,6 @@ function DB:Connect()
 		end)
 	end
 
-	DB.DATABASE:setAutoReconnect(true)
-	DB.DATABASE:connect()
+	DATABASE:setAutoReconnect(true)
+	DATABASE:connect()
 end
