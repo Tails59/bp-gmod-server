@@ -2,6 +2,8 @@
 -- Author: Exho (obviously), Tomelyr, LuaTenshi
 -- Version: 4/12/15
 
+if DarkRPChat then return end
+
 if SERVER then
 	AddCSLuaFile()
 	return
@@ -19,9 +21,6 @@ surface.CreateFont( "DarkRPChat_18", {
 	font = "Roboto LT",
 	size = ScreenScale(6),
 	weight = 500,
-	//antialias = true,
-	//shadow = true,
-	//extended = true,
 } )
 
 surface.CreateFont( "DarkRPChat_16", {
@@ -33,13 +32,9 @@ surface.CreateFont( "DarkRPChat_16", {
 	extended = true,
 } )
 
---// Prevents errors if the script runs too early, which it will
-hook.Remove("Initialize", "DarkRPChat_init")
-
-hook.Add("Initialize", "DarkRPChat_init", function()
+hook.Add("InitPostEntity", "DarkRPChat_init", function()
 	DarkRPChat.buildBox()
 end)
-
 
 --// Builds the chatbox but doesn't display it
 function DarkRPChat.buildBox()
@@ -217,6 +212,7 @@ end
 
 --// Hides the chat box but not the messages
 function DarkRPChat.hideBox()
+	LocalPlayer()._ChatBoxOpen = false
 	DarkRPChat.frame.Paint = function() end
 	DarkRPChat.chatLog.Paint = function() end
 	
@@ -250,6 +246,7 @@ end
 
 --// Shows the chat box
 function DarkRPChat.showBox()
+	LocalPlayer()._ChatBoxOpen = true
 	-- Draw the chat box again
 	DarkRPChat.frame.Paint = DarkRPChat.oldPaint
 	DarkRPChat.chatLog.Paint = DarkRPChat.oldPaint2

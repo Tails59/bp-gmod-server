@@ -44,6 +44,12 @@ NoticeMaterial[ NOTIFY_UNDO ]		= Material( "vgui/notices/undo" )
 NoticeMaterial[ NOTIFY_HINT ]		= Material( "vgui/notices/hint" )
 NoticeMaterial[ NOTIFY_CLEANUP ]	= Material( "vgui/notices/cleanup" )
 
+if Notices then
+	for k, v in pairs(Notices) do
+		v:Remove()
+	end
+end
+
 local Notices = {}
 
 function notification.AddProgress( uid, text )

@@ -31,5 +31,8 @@ if SERVER then
 
 		hook.Run()
 	end
+
+	function PLAYER:PlayerDeath(inflictor, attacker)
+	end
 end
 player_manager.RegisterClass( "darkrp_baseclass", PLAYER, "player_default" )

@@ -10,7 +10,7 @@ DB.db = "darkrp"
 DB.port = 3306
 
 local DATABASE = DATABASE or nil
-
+local mysqloo = mysqloo
 /*
 	Returns the query results if successful.
 	If wait is true, it will force the server to wait until the query has finished executing before returning
@@ -67,6 +67,35 @@ function DB:PreparedQuery(query, callback)
 	return preparedQuery
 end
 
+/*
+	Returns true if a column exists, false otherwise.
+	This does not use a PreparedQuery as it causes timing issues in this use case.
+	This function is only intended to be called on the setupDatabase hook so it shouldn't
+	cause too much of an issue.
+
+	This function will force the server to wait until the query has completed, if you don't want
+	this to happen then use something else
+*/
+function DB:ColumnExists(col_name, table_name)
+	local result = false;
+	local query = [[
+		SELECT * 
+		FROM INFORMATION_SCHEMA.COLUMNS
+		WHERE TABLE_SCHEMA='darkrp' AND 
+		TABLE_NAME=']]..table_name..[[' AND 
+		COLUMN_NAME=']]..col_name..[[']]
+	
+	function callback(data)
+		if data[1] != nil then
+			return false
+		else
+			return true;
+		end
+	end
+
+	DB:Query(query, callback, true)
+end
+
 function DB:LoadPlayer(ply)
 
 end
@@ -90,22 +119,14 @@ end
 	after checking if a player doesnt already have a record
 */
 function DB:NewPlayerSave(steamid64)
-	local q = [[INSERT INTO main VALUES(
-		]]..steamid64..[[,
+	local q = [[INSERT INTO main(steamid, money) VALUES(
+		']]..steamid64..[[',
 		]]..Config.STARTING_MONEY..[[
 	)]]
 
-	local query = DATABASE:query(q)
-
-	function query:onSuccess(data)
-	end
-
-	function query:onError(err)
-		ELogs.Error(err)
-	end
-
-	query:start()
-	query:wait(true)
+	local query = DB:Query(q, function(data)
+		print("added new player to the db!")
+	end, true)
 end
 
 /**
@@ -117,12 +138,12 @@ end
 function DB:Setup()
 	local q = [[CREATE TABLE IF NOT EXISTS main(
 	steamid VARCHAR(17) NOT NULL UNIQUE,
-	money INT(10) UNSIGNED NOT NULL,
-
-	CONSTRAINT main_pk PRIMARY KEY (steamid),
-
-	INDEX(steamid)
-	)]]
+	money INT UNSIGNED NOT NULL,
+	
+    INDEX(steamid),
+    PRIMARY KEY(steamid)
+	)
+	]]
 
 	local query = DATABASE:query(q)
 
