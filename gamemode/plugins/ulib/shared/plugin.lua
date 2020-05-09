@@ -1,3 +1,4 @@
+AddCSLuaFile()
 --[[
 	Title: Plugin Helpers
 

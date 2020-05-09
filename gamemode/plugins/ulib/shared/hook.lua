@@ -1,3 +1,4 @@
+AddCSLuaFile()
 if hook.GetULibTable then return end	-- Prevent autorefresh reloading this file
 
 local gmod			= gmod

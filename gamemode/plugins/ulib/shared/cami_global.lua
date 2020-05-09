@@ -1,4 +1,4 @@
-
+AddCSLuaFile()
 --[[
 CAMI - Common Admin Mod Interface.
 Makes admin mods intercompatible and provides an abstract privilege interface

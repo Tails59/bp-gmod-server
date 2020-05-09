@@ -131,6 +131,7 @@ function GM:DecachePlayer(steamid64)
 	end
 end
 
+/*
 function GM:PlayerSay(ply, text, teamChat)
 	if string.StartWith(text, "//") then
 	end
@@ -160,7 +161,7 @@ function GM:PlayerSay(ply, text, teamChat)
 	end
 
 	return text
-end
+end*/
 
 util.AddNetworkString("openF1")
 function GM:ShowHelp(ply)

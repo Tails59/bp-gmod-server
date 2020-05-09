@@ -1,3 +1,4 @@
+AddCSLuaFile()
 include("misc.lua")
 
 --[[
